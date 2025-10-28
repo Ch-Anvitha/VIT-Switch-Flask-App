@@ -1,0 +1,4 @@
+# This file is for compatibility - actual deployment is on Render
+[build]
+  command = "echo 'Deploying to Render instead'"
+  publish = "."

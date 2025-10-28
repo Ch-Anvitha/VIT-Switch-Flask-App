@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 
 app = Flask(__name__)
-app.secret_key = "dev-secret"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret")
 
 # Load environment variables
 load_dotenv()
@@ -97,4 +97,6 @@ def success():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    port = int(os.getenv("PORT", 5000))
+    debug = os.getenv("FLASK_ENV") != "production"
+    app.run(host="0.0.0.0", port=port, debug=debug)
