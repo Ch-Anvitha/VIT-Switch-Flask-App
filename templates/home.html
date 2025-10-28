@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-white">
+  <div class="w-full max-w-2xl p-8">
+    <div class="mb-8">
+      <h1 class="text-3xl mb-2" style="color:#03045e">VIT Switch</h1>
+      <p class="text-gray-600">Welcome {{ user_email }}</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <a href="{{ url_for('reviews') }}" class="block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow" style="background-color:#e9ebef">
+        <div class="text-lg font-medium text-black">Reviews</div>
+      </a>
+      <a href="{{ url_for('faculty_review') }}" class="block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow" style="background-color:#e9ebef">
+        <div class="text-lg font-medium text-black">Faculty Review</div>
+      </a>
+      <a href="{{ url_for('course_review') }}" class="block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow" style="background-color:#e9ebef">
+        <div class="text-lg font-medium text-black">Course Review</div>
+      </a>
+      <a href="{{ url_for('batch_switch') }}" class="block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow" style="background-color:#e9ebef">
+        <div class="text-lg font-medium text-black">Batch Switch</div>
+      </a>
+      <a href="{{ url_for('eduvids') }}" class="block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow" style="background-color:#e9ebef">
+        <div class="text-lg font-medium text-black">Eduvids</div>
+      </a>
+      <a href="{{ url_for('dashboard') }}" class="block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow" style="background-color:#e9ebef">
+        <div class="text-lg font-medium text-black">Dashboard</div>
+      </a>
+    </div>
+    <form method="post" action="{{ url_for('auth_logout') }}" class="mt-8">
+      <button class="h-10 px-6 rounded-md text-white" style="background-color:#03045e">Logout</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen" style="background-color:#03045e">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center mb-12">
+      <a href="{{ url_for('home') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-md mr-4">
+        ← Back
+      </a>
+      <h1 class="text-3xl text-white">Reviews</h1>
+    </div>
+
+    <div class="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+      <a href="{{ url_for('faculty_review') }}" class="w-80 h-16 flex items-center justify-center text-lg rounded-md bg-white hover:shadow-lg transition-all" style="color:#03045e">
+        Faculty Review
+      </a>
+      <a href="{{ url_for('course_review') }}" class="w-80 h-16 flex items-center justify-center text-lg rounded-md bg-white hover:shadow-lg transition-all" style="color:#03045e">
+        Course Review
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

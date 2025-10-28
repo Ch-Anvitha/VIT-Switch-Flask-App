@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center" style="background-color:#03045e">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl mb-2" style="color:#03045e">VIT Switch</h1>
+      <p class="text-gray-600">Create a new account</p>
+    </div>
+    <form method="post" class="space-y-6">
+      <div>
+        <label for="name" class="block mb-2 text-gray-700">Full Name</label>
+        <input id="name" name="name" type="text" required placeholder="Enter your full name" class="w-full border rounded-md h-10 px-3" />
+      </div>
+      <div>
+        <label for="email" class="block mb-2 text-gray-700">Email</label>
+        <input id="email" name="email" type="email" required placeholder="Enter your VIT email" class="w-full border rounded-md h-10 px-3" />
+      </div>
+      <div>
+        <label for="password" class="block mb-2 text-gray-700">Password</label>
+        <input id="password" name="password" type="password" required placeholder="Create a password" class="w-full border rounded-md h-10 px-3" />
+      </div>
+      <div>
+        <label for="confirmPassword" class="block mb-2 text-gray-700">Confirm Password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Confirm your password" class="w-full border rounded-md h-10 px-3" />
+      </div>
+      {% if error %}
+      <div class="text-red-600 text-sm">{{ error }}</div>
+      {% endif %}
+      <button type="submit" class="w-full h-10 rounded-md text-white" style="background-color:#03045e">Sign Up</button>
+    </form>
+    <div class="mt-6 text-center">
+      <p class="text-gray-600 text-sm">Already have an account?
+        <a href="{{ url_for('login_page') }}" class="underline" style="color:#03045e">Login here</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

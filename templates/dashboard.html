@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen" style="background-color:#03045e">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center mb-8">
+      <a href="{{ url_for('home') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-md mr-4">
+        ← Back
+      </a>
+      <h1 class="text-3xl text-white">User Dashboard</h1>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg p-8 mb-8">
+        <div class="flex items-center mb-6">
+          <div class="h-12 w-12 rounded-full bg-primary mr-4 flex items-center justify-center text-white text-xl">
+            👤
+          </div>
+          <div>
+            <h2 class="text-2xl">Welcome to VIT Switch</h2>
+            <p class="text-gray-600">{{ user_email }}</p>
+            <p class="text-gray-600 text-sm">Manage your activities and track your requests</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg p-6">
+          <div class="text-4xl mb-4">📝</div>
+          <h3 class="mb-2 font-medium">Reviews</h3>
+          <p class="text-gray-600 text-sm">
+            View and manage your faculty and course reviews
+          </p>
+        </div>
+
+        <div class="bg-white rounded-lg p-6">
+          <div class="text-4xl mb-4">🔄</div>
+          <h3 class="mb-2 font-medium">Batch Switch</h3>
+          <p class="text-gray-600 text-sm">
+            Track your batch switch requests and their status
+          </p>
+        </div>
+
+        <div class="bg-white rounded-lg p-6">
+          <div class="text-4xl mb-4">🎥</div>
+          <h3 class="mb-2 font-medium">Eduvids</h3>
+          <p class="text-gray-600 text-sm">
+            Access educational videos for your courses
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-6 mt-8">
+        <h3 class="mb-4 font-medium">Recent Activity</h3>
+        <p class="text-gray-600">No recent activity to display</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

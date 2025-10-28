@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen" style="background-color:#03045e">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center mb-8">
+      <a href="{{ url_for('home') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-md mr-4">
+        ← Back
+      </a>
+      <h1 class="text-3xl text-white">Batch Switch</h1>
+    </div>
+
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg">
+      <form method="post" action="{{ url_for('batch_switch') }}" class="space-y-6">
+        <div>
+          <label for="currentBatch" class="block mb-2 font-medium">Current Batch</label>
+          <input id="currentBatch" name="currentBatch" type="text" required placeholder="e.g., CSE-A" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div>
+          <label for="preferredBatch" class="block mb-2 font-medium">Preferred Batch</label>
+          <input id="preferredBatch" name="preferredBatch" type="text" required placeholder="e.g., CSE-B" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div>
+          <label for="currentCGPA" class="block mb-2 font-medium">Current CGPA</label>
+          <input id="currentCGPA" name="currentCGPA" type="number" step="0.01" required placeholder="e.g., 8.5" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div>
+          <label for="preferredCGPARange" class="block mb-2 font-medium">Preferred CGPA Range</label>
+          <input id="preferredCGPARange" name="preferredCGPARange" type="text" required placeholder="e.g., 8.0 - 9.0" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div class="flex space-x-4">
+          <a href="{{ url_for('home') }}" class="flex-1 h-10 flex items-center justify-center border rounded-md hover:bg-gray-100">
+            Cancel
+          </a>
+          <button type="submit" class="flex-1 h-10 rounded-md text-white" style="background-color:#03045e">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

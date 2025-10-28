@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen" style="background-color:#03045e">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center mb-8">
+      <a href="{{ url_for('reviews') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-md mr-4">
+        ← Back
+      </a>
+      <h1 class="text-3xl text-white">Course Review</h1>
+    </div>
+
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg">
+      <form method="post" action="{{ url_for('course_review') }}" class="space-y-6">
+        <div>
+          <label for="rollNo" class="block mb-2 font-medium">Roll Number</label>
+          <input id="rollNo" name="rollNo" type="text" required placeholder="Enter your roll number" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div>
+          <label for="currentYear" class="block mb-2 font-medium">Current Year</label>
+          <input id="currentYear" name="currentYear" type="text" required placeholder="e.g., 2nd Year" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div>
+          <label for="courseName" class="block mb-2 font-medium">Course Name</label>
+          <input id="courseName" name="courseName" type="text" required placeholder="Enter course name" class="w-full border rounded-md h-10 px-3" />
+        </div>
+
+        <div>
+          <label for="review" class="block mb-2 font-medium">Review (Max 1000 characters)</label>
+          <textarea id="review" name="review" required placeholder="Write your review here..." class="w-full border rounded-md px-3 py-2 min-h-[200px] resize-none"></textarea>
+          <p class="text-sm text-gray-600 mt-1">Maximum 1000 characters</p>
+        </div>
+
+        <div class="flex space-x-4">
+          <a href="{{ url_for('reviews') }}" class="flex-1 h-10 flex items-center justify-center border rounded-md hover:bg-gray-100">
+            Cancel
+          </a>
+          <button type="submit" class="flex-1 h-10 rounded-md text-white" style="background-color:#03045e">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

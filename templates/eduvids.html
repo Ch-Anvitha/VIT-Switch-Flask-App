@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen" style="background-color:#03045e">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center mb-8">
+      <a href="{{ url_for('home') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-md mr-4">
+        ← Back
+      </a>
+      <h1 class="text-3xl text-white">Educational Videos</h1>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white p-6 rounded-lg mb-6">
+        <label for="branch" class="block mb-2 font-medium">Select Your Branch</label>
+        <select id="branch" class="w-full border rounded-md h-10 px-3">
+          <option value="">Choose a branch...</option>
+          <option value="CSE">Computer Science (CSE)</option>
+          <option value="CSM">AI & Machine Learning (CSM)</option>
+          <option value="CSD">Data Science (CSD)</option>
+          <option value="CSIT">IT (CSIT)</option>
+        </select>
+      </div>
+
+      <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Default videos -->
+        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
+            🎥
+          </div>
+          <h3 class="font-medium mb-2">Data Structures and Algorithms</h3>
+          <p class="text-sm text-gray-600 mb-4">Comprehensive tutorial series</p>
+          <a href="https://www.youtube.com/results?search_query=data+structures+algorithms" target="_blank" class="text-blue-600 hover:underline text-sm">
+            Watch on YouTube →
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
+            🎥
+          </div>
+          <h3 class="font-medium mb-2">Operating Systems</h3>
+          <p class="text-sm text-gray-600 mb-4">OS concepts and tutorials</p>
+          <a href="https://www.youtube.com/results?search_query=operating+systems" target="_blank" class="text-blue-600 hover:underline text-sm">
+            Watch on YouTube →
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
+            🎥
+          </div>
+          <h3 class="font-medium mb-2">Database Management</h3>
+          <p class="text-sm text-gray-600 mb-4">DBMS tutorials and concepts</p>
+          <a href="https://www.youtube.com/results?search_query=database+management" target="_blank" class="text-blue-600 hover:underline text-sm">
+            Watch on YouTube →
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
+            🎥
+          </div>
+          <h3 class="font-medium mb-2">Computer Networks</h3>
+          <p class="text-sm text-gray-600 mb-4">Networking fundamentals</p>
+          <a href="https://www.youtube.com/results?search_query=computer+networks" target="_blank" class="text-blue-600 hover:underline text-sm">
+            Watch on YouTube →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
