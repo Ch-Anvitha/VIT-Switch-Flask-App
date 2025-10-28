@@ -97,15 +97,45 @@ def signup():
 
 @app.route("/home", methods=["GET"]) 
 def home():
-    if not is_authenticated():
-        return redirect(url_for("login_page"))
-    return render_template("home.html", user_email=session.get("user_email"))
+    try:
+        if not is_authenticated():
+            return redirect(url_for("login_page"))
+        user_email = session.get("user_email", "Unknown User")
+        return render_template("home.html", user_email=user_email)
+    except Exception as e:
+        return f"Error loading home page: {str(e)}", 500
 
 
 @app.route("/success", methods=["GET"]) 
 def success():
     message = request.args.get("message", "Successfully submitted!")
     return render_template("success.html", message=message)
+
+
+# Placeholder routes for home page links
+@app.route("/reviews")
+def reviews():
+    return render_template("reviews.html")
+
+@app.route("/faculty-review")
+def faculty_review():
+    return render_template("faculty_review.html")
+
+@app.route("/course-review")
+def course_review():
+    return render_template("course_review.html")
+
+@app.route("/batch-switch")
+def batch_switch():
+    return render_template("batch_switch.html")
+
+@app.route("/eduvids")
+def eduvids():
+    return render_template("eduvids.html")
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
 
 
 if __name__ == "__main__":
