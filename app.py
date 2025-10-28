@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import os
+import mimetypes
 from dotenv import load_dotenv
 from supabase import create_client, Client
+
+# Fix MIME type for CSS files
+mimetypes.add_type('text/css', '.css')
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret")
@@ -21,11 +25,19 @@ def is_authenticated():
     return bool(session.get("user_email"))
 
 
+@app.route("/health")
+def health_check():
+    return {"status": "ok", "message": "VIT Switch Flask App is running!"}
+
+
 @app.route("/", methods=["GET"]) 
 def login_page():
-    if is_authenticated():
-        return redirect(url_for("home"))
-    return render_template("login.html")
+    try:
+        if is_authenticated():
+            return redirect(url_for("home"))
+        return render_template("login.html")
+    except Exception as e:
+        return f"Error loading login page: {str(e)}", 500
 
 
 @app.route("/auth/login", methods=["POST"]) 
