@@ -30,6 +30,35 @@ def health_check():
     return {"status": "ok", "message": "VIT Switch Flask App is running!"}
 
 
+@app.route("/admin/users")
+def admin_users():
+    """View all users - Admin endpoint"""
+    if supabase is None:
+        return {"error": "Supabase not configured"}, 500
+    
+    try:
+        # Get users using Supabase admin API
+        response = supabase.auth.admin.list_users()
+        users = []
+        
+        for user in response:
+            users.append({
+                "id": user.id,
+                "email": user.email,
+                "created_at": str(user.created_at),
+                "last_sign_in": str(user.last_sign_in_at) if user.last_sign_in_at else "Never",
+                "email_confirmed": user.email_confirmed_at is not None
+            })
+        
+        return {
+            "total_users": len(users),
+            "users": users,
+            "message": f"Found {len(users)} registered users"
+        }
+    except Exception as e:
+        return {"error": f"Failed to fetch users: {str(e)}"}, 500
+
+
 @app.route("/", methods=["GET"]) 
 def login_page():
     try:
