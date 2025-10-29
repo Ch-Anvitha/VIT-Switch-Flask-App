@@ -17,56 +17,103 @@
           <option value="CSE">Computer Science (CSE)</option>
           <option value="CSM">AI & Machine Learning (CSM)</option>
           <option value="CSD">Data Science (CSD)</option>
-          <option value="CSIT">IT (CSIT)</option>
+          <option value="CSIT">Information Technology (CSIT)</option>
         </select>
       </div>
 
       <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Default videos -->
-        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
-            🎥
-          </div>
-          <h3 class="font-medium mb-2">Data Structures and Algorithms</h3>
-          <p class="text-sm text-gray-600 mb-4">Comprehensive tutorial series</p>
-          <a href="https://www.youtube.com/results?search_query=data+structures+algorithms" target="_blank" class="text-blue-600 hover:underline text-sm">
-            Watch on YouTube →
-          </a>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
-            🎥
-          </div>
-          <h3 class="font-medium mb-2">Operating Systems</h3>
-          <p class="text-sm text-gray-600 mb-4">OS concepts and tutorials</p>
-          <a href="https://www.youtube.com/results?search_query=operating+systems" target="_blank" class="text-blue-600 hover:underline text-sm">
-            Watch on YouTube →
-          </a>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
-            🎥
-          </div>
-          <h3 class="font-medium mb-2">Database Management</h3>
-          <p class="text-sm text-gray-600 mb-4">DBMS tutorials and concepts</p>
-          <a href="https://www.youtube.com/results?search_query=database+management" target="_blank" class="text-blue-600 hover:underline text-sm">
-            Watch on YouTube →
-          </a>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-          <div class="h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">
-            🎥
-          </div>
-          <h3 class="font-medium mb-2">Computer Networks</h3>
-          <p class="text-sm text-gray-600 mb-4">Networking fundamentals</p>
-          <a href="https://www.youtube.com/results?search_query=computer+networks" target="_blank" class="text-blue-600 hover:underline text-sm">
-            Watch on YouTube →
-          </a>
-        </div>
+        <!-- Videos will be dynamically loaded based on branch selection -->
       </div>
+
+      <script>
+        const branchSelect = document.getElementById('branch');
+        const videosGrid = document.getElementById('videos-grid');
+
+        const branchVideos = {
+          CSE: [
+            { title: 'Data Structures and Algorithms', desc: 'CSE core subject tutorials', url: 'https://www.youtube.com/watch?v=8hly31xKli0' },
+            { title: 'Operating Systems', desc: 'OS concepts for CSE', url: 'https://www.youtube.com/watch?v=vBURTt97EkA' },
+            { title: 'Computer Architecture', desc: 'Hardware design and architecture', url: 'https://www.youtube.com/watch?v=FZGugFqdr60' },
+            { title: 'Software Engineering', desc: 'Development methodologies', url: 'https://www.youtube.com/watch?v=SUJZl5vBFKM' }
+          ],
+          CSM: [
+            { title: 'Machine Learning Fundamentals', desc: 'ML basics for CSM students', url: 'https://www.youtube.com/watch?v=Gv9_4yMHFhI' },
+            { title: 'Deep Learning', desc: 'Neural networks and AI', url: 'https://www.youtube.com/watch?v=aircAruvnKk' },
+            { title: 'Python for Data Science', desc: 'Programming for ML/AI', url: 'https://www.youtube.com/watch?v=LHBE6Q9XlzI' },
+            { title: 'AI Ethics and Applications', desc: 'AI concepts and applications', url: 'https://www.youtube.com/watch?v=OM6XIICm_qo' }
+          ],
+          CSD: [
+            { title: 'Statistics for Data Science', desc: 'Statistical methods for data analysis', url: 'https://www.youtube.com/watch?v=4YLtvNeRIrg' },
+            { title: 'Big Data Technologies', desc: 'Hadoop, Spark, and big data tools', url: 'https://www.youtube.com/watch?v=1wzxEBlH8vk' },
+            { title: 'Data Visualization', desc: 'Creating insights from data', url: 'https://www.youtube.com/watch?v=5Zg-C8AAIGg' },
+            { title: 'Data Mining', desc: 'Extracting patterns from data', url: 'https://www.youtube.com/watch?v=fpHiKxBf4xQ' }
+          ],
+          CSIT: [
+            { title: 'Information Security', desc: 'Cybersecurity fundamentals', url: 'https://www.youtube.com/watch?v=inWWhr5tnEA' },
+            { title: 'Network Administration', desc: 'IT infrastructure management', url: 'https://www.youtube.com/watch?v=qiQR5rTSshw' },
+            { title: 'Cloud Computing', desc: 'AWS, Azure, GCP basics', url: 'https://www.youtube.com/watch?v=M988_fsOSWo' },
+            { title: 'IT Project Management', desc: 'Managing IT projects', url: 'https://www.youtube.com/watch?v=Ri-ENcLNYUk' }
+          ]
+        };
+
+        function renderVideos(videos) {
+          videosGrid.innerHTML = '';
+          videos.forEach(video => {
+            const thumbnailSrc = `https://img.youtube.com/vi/${video.url.split('v=')[1]}/default.jpg`;
+
+
+            const videoCard = `
+              <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <div class="h-48 bg-gray-200 rounded-md mb-4 overflow-hidden relative group cursor-pointer" onclick="window.open('${video.url}', '_blank')">
+                  <img src="${thumbnailSrc}"
+                       alt="${video.title}"
+                       class="w-full h-full object-cover"
+                       onerror="this.src='/static/images/video-placeholder.jpg'; this.onerror=null;">
+                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                    <div class="bg-red-600 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l8-5-8-5z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <h3 class="font-semibold mb-2 text-gray-800 line-clamp-2">${video.title}</h3>
+                <p class="text-sm text-gray-600 mb-4 line-clamp-2">${video.desc}</p>
+                <a href="${video.url || 'https://www.youtube.com/results?search_query=' + video.query}"
+                   target="_blank"
+                   class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors duration-200">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 5v10l8-5-8-5z"/>
+                  </svg>
+                  Watch on YouTube
+                </a>
+              </div>
+            `;
+            videosGrid.innerHTML += videoCard;
+          });
+        }
+
+        // Default videos (general CS topics)
+        const defaultVideos = [
+          { title: 'Programming Fundamentals', desc: 'Basic programming concepts', url: 'https://www.youtube.com/watch?v=zOjov-2OZ0E' },
+          { title: 'Web Development', desc: 'HTML, CSS, JavaScript basics', url: 'https://www.youtube.com/watch?v=BsDoLVMnmZs' },
+          { title: 'Version Control with Git', desc: 'Git and GitHub tutorials', url: 'https://www.youtube.com/watch?v=8JJ101D3knE' },
+          { title: 'Career in Tech', desc: 'Tech industry insights', url: 'https://www.youtube.com/watch?v=WSInHOlZGw4' }
+        ];
+
+        // Load default videos initially
+        renderVideos(defaultVideos);
+
+        // Handle branch selection
+        branchSelect.addEventListener('change', function() {
+          const selectedBranch = this.value;
+          if (selectedBranch && branchVideos[selectedBranch]) {
+            renderVideos(branchVideos[selectedBranch]);
+          } else {
+            renderVideos(defaultVideos);
+          }
+        });
+      </script>
     </div>
   </div>
 </div>

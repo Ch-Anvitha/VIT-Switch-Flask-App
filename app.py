@@ -30,12 +30,24 @@ def health_check():
     return {"status": "ok", "message": "VIT Switch Flask App is running!"}
 
 
+@app.route("/debug/env")
+def debug_env():
+    """Debug endpoint to check environment variables"""
+    return {
+        "SUPABASE_URL": bool(os.getenv("SUPABASE_URL")),
+        "SUPABASE_ANON_KEY": bool(os.getenv("SUPABASE_ANON_KEY")),
+        "SUPABASE_SERVICE_ROLE_KEY": bool(os.getenv("SUPABASE_SERVICE_ROLE_KEY")),
+        "service_role_key_length": len(os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")),
+        "FLASK_SECRET_KEY": bool(os.getenv("FLASK_SECRET_KEY"))
+    }
+
+
 @app.route("/admin/users")
 def admin_users():
     """View all users - Admin endpoint"""
     # Check admin authentication
     admin_password = request.args.get("admin_password") or request.headers.get("X-Admin-Password")
-    if not admin_password or admin_password != "vitswitch":
+    if not admin_password or admin_password != "admin123":
         return {"error": "Admin password required"}, 401
 
     # For now, return a message since we can't access admin API with anon key
@@ -191,6 +203,71 @@ def batch_switch():
 @app.route("/eduvids")
 def eduvids():
     return render_template("eduvids.html")
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "GET":
+        return render_template("admin_login.html")
+
+    password = request.form.get("admin_password", "").strip()
+    if password == "admin123":  # Simple admin password
+        session["admin_logged_in"] = True
+        return redirect(url_for("admin_dashboard"))
+    else:
+        return render_template("admin_login.html", error="Invalid password")
+
+@app.route("/admin")
+def admin_redirect():
+    return redirect(url_for("admin_login"))
+
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin_login"))
+
+    # Get user stats for dashboard - real-time data access
+    total_users = 0
+    confirmed_users = 0
+    recent_users = 0
+    users = []
+
+    # For real-time data, you need SUPABASE_SERVICE_ROLE_KEY instead of SUPABASE_ANON_KEY
+    service_role_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+    print(f"[DEBUG] Service role key present: {bool(service_role_key)}")
+
+    if service_role_key and SUPABASE_URL:
+        try:
+            # Use service role key for admin operations
+            supabase_admin = create_client(SUPABASE_URL, service_role_key)
+            print("[DEBUG] Created admin client with service role key")
+            response = supabase_admin.auth.admin.list_users()
+            print(f"[DEBUG] Admin API response received: {type(response)}")
+
+            if hasattr(response, 'data') and response.data:
+                users = response.data
+                total_users = len(users)
+                confirmed_users = sum(1 for user in users if getattr(user, 'email_confirmed_at', None))
+                # Calculate recent users (last 30 days)
+                from datetime import datetime, timedelta
+                thirty_days_ago = datetime.now() - timedelta(days=30)
+                recent_users = sum(1 for user in users if getattr(user, 'created_at', None) and
+                                 datetime.fromisoformat(str(getattr(user, 'created_at', '')).replace('Z', '+00:00')) > thirty_days_ago)
+                print(f"[DEBUG] Successfully loaded {total_users} users, {confirmed_users} confirmed")
+
+        except Exception as e:
+            print(f"[DEBUG] Failed to fetch admin data with service role key: {e}")
+            error = f"Failed to load user data: {str(e)}"
+    else:
+        print("[DEBUG] No service role key configured")
+        # No service role key configured - show helpful message
+        error = "Real-time user data requires SUPABASE_SERVICE_ROLE_KEY. For now, use the Supabase Dashboard links below to view user data."
+
+    return render_template("admin_dashboard.html",
+                          total_users=total_users,
+                          confirmed_users=confirmed_users,
+                          recent_users=recent_users,
+                          users=users,
+                          error=error if 'error' in locals() and error else None)
 
 @app.route("/dashboard")
 def dashboard():
