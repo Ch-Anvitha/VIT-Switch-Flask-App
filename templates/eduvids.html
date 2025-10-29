@@ -60,8 +60,10 @@
         <p class="text-gray-600">Choose your branch from the dropdown above to see curated educational videos</p>
       </div>
     </div>
+  </div>
+</div>
 
-      <script>
+<script>
         const branchSelect = document.getElementById('branch');
         const videosGrid = document.getElementById('videos-grid');
 
@@ -88,7 +90,7 @@
             { title: 'Data Visualization with Python', desc: 'Matplotlib and Seaborn tutorial', url: 'https://www.youtube.com/watch?v=UO98lJQ3QGI' },
             { title: 'SQL for Data Science', desc: 'Database queries for data analysis', url: 'https://www.youtube.com/watch?v=HXV3zeQKqGY' },
             { title: 'Big Data with Apache Spark', desc: 'Spark fundamentals and applications', url: 'https://www.youtube.com/watch?v=F8pyaR4uQ2g' },
-            { title: 'Data Mining Techniques', desc: 'Pattern discovery in large datasets', url: 'https://www.youtube.com/watch?v=aircAruvnKk' }
+            { title: 'Data Mining Techniques', desc: 'Pattern discovery in large datasets', url: 'https://www.youtube.com/watch?v=kBdlM6hNDAE' }
           ],
           CSIT: [
             { title: 'Cybersecurity Full Course', desc: 'Information security fundamentals', url: 'https://www.youtube.com/watch?v=U_P23SqJaDc' },
@@ -187,14 +189,14 @@
             if (selectedBranch && branchVideos[selectedBranch]) {
               renderVideos(branchVideos[selectedBranch]);
               toggleEmptyState(false);
+            } else if (selectedBranch === '') {
+              videosGrid.innerHTML = '';
+              toggleEmptyState(true);
             } else {
               renderVideos(defaultVideos);
               toggleEmptyState(false);
             }
           }, 500);
         });
-      </script>
-    </div>
-  </div>
-</div>
+</script>
 {% endblock %}
