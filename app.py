@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import os
+import json
 import mimetypes
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -114,9 +115,12 @@ def auth_login():
             return render_template("login.html", error="Please check your email and confirm your account before logging in")
         elif "invalid login credentials" in error_message.lower() or "invalid_credentials" in error_message.lower():
             return render_template("login.html", error="Invalid credentials. If you just signed up, please confirm your email first. Otherwise check your email/password")
+        elif "rate limit" in error_message.lower() or "security purposes" in error_message.lower():
+            return render_template("login.html", error="Too many login attempts. Please wait a moment and try again")
+        elif "network" in error_message.lower() or "connection" in error_message.lower():
+            return render_template("login.html", error="Network error. Please check your internet connection and try again")
         else:
-            # Show actual error for debugging
-            return render_template("login.html", error=f"Login failed: {error_message}")
+            return render_template("login.html", error="Login failed. Please try again later")
 
 
 @app.route("/auth/logout", methods=["POST"]) 
@@ -155,9 +159,20 @@ def signup():
     except Exception as e:
         error_msg = str(e)
         print(f"[DEBUG] Signup error: {error_msg}")
+        
+        # Handle specific error types with user-friendly messages
         if "already registered" in error_msg.lower():
             return render_template("signup.html", error="Email already registered. Please login or use a different email")
-        return render_template("signup.html", error=f"Failed to create account: {error_msg}")
+        elif "rate limit" in error_msg.lower() or "32 seconds" in error_msg.lower() or "security purposes" in error_msg.lower():
+            return render_template("signup.html", error="Please wait a moment before creating another account. Try again in 30-60 seconds.")
+        elif "invalid email" in error_msg.lower():
+            return render_template("signup.html", error="Please enter a valid email address")
+        elif "weak password" in error_msg.lower() or "password" in error_msg.lower():
+            return render_template("signup.html", error="Password must be at least 6 characters long and contain letters and numbers")
+        elif "network" in error_msg.lower() or "connection" in error_msg.lower():
+            return render_template("signup.html", error="Network error. Please check your internet connection and try again")
+        else:
+            return render_template("signup.html", error="Unable to create account at this time. Please try again later")
 
 
 @app.route("/confirm-email-help", methods=["GET"])
@@ -240,19 +255,144 @@ def admin_dashboard():
             # Use service role key for admin operations
             supabase_admin = create_client(SUPABASE_URL, service_role_key)
             print("[DEBUG] Created admin client with service role key")
-            response = supabase_admin.auth.admin.list_users()
-            print(f"[DEBUG] Admin API response received: {type(response)}")
 
-            if hasattr(response, 'data') and response.data:
-                users = response.data
-                total_users = len(users)
-                confirmed_users = sum(1 for user in users if getattr(user, 'email_confirmed_at', None))
-                # Calculate recent users (last 30 days)
-                from datetime import datetime, timedelta
-                thirty_days_ago = datetime.now() - timedelta(days=30)
-                recent_users = sum(1 for user in users if getattr(user, 'created_at', None) and
-                                 datetime.fromisoformat(str(getattr(user, 'created_at', '')).replace('Z', '+00:00')) > thirty_days_ago)
-                print(f"[DEBUG] Successfully loaded {total_users} users, {confirmed_users} confirmed")
+            # Try alternative approach - use REST API directly
+            import requests
+            import json
+            headers = {
+                'Authorization': f'Bearer {service_role_key}',
+                'apikey': service_role_key,
+                'Content-Type': 'application/json'
+            }
+
+            api_url = f"{SUPABASE_URL}/auth/v1/admin/users"
+            print(f"[DEBUG] Making direct API call to: {api_url}")
+
+            response = requests.get(api_url, headers=headers)
+            print(f"[DEBUG] Direct API response status: {response.status_code}")
+
+            if response.status_code == 200:
+                try:
+                    response_data = response.json()
+                    
+                    # Handle different response formats
+                    if isinstance(response_data, dict) and 'users' in response_data:
+                        users = response_data['users']
+                    elif isinstance(response_data, list):
+                        users = response_data
+                    else:
+                        users = [response_data] if response_data else []
+                        
+                    total_users = len(users)
+                    print(f"[DEBUG] Raw users data type: {type(users)}, length: {total_users}")
+                    
+                    # Process users safely
+                    formatted_users = []
+                    confirmed_users = 0
+                    recent_users = 0
+                    
+                    from datetime import datetime, timedelta
+                    thirty_days_ago = datetime.now() - timedelta(days=30)
+                    
+                    for user in users:
+                        try:
+                            # Ensure user is a dictionary
+                            if isinstance(user, str):
+                                continue  # Skip invalid user data
+                            
+                            user_dict = user if isinstance(user, dict) else vars(user) if hasattr(user, '__dict__') else {}
+                            
+                            # Extract user information safely
+                            user_id = user_dict.get('id', '')
+                            email = user_dict.get('email', '')
+                            email_confirmed_at = user_dict.get('email_confirmed_at')
+                            created_at = user_dict.get('created_at', '')
+                            last_sign_in_at = user_dict.get('last_sign_in_at', '')
+                            
+                            # Count confirmed users
+                            if email_confirmed_at:
+                                confirmed_users += 1
+                            
+                            # Count recent users
+                            if created_at:
+                                try:
+                                    created_date = datetime.fromisoformat(str(created_at).replace('Z', '+00:00'))
+                                    if created_date > thirty_days_ago:
+                                        recent_users += 1
+                                except (ValueError, TypeError):
+                                    pass
+                            
+                            formatted_users.append({
+                                'id': str(user_id),
+                                'email': str(email),
+                                'email_confirmed': email_confirmed_at is not None,
+                                'created_at': str(created_at),
+                                'last_sign_in': str(last_sign_in_at)
+                            })
+                        except Exception as user_error:
+                            print(f"[DEBUG] Error processing individual user: {user_error}")
+                            continue
+                    
+                    users = formatted_users
+                    print(f"[DEBUG] Successfully processed {len(users)} users via direct API, {confirmed_users} confirmed, {recent_users} recent")
+                except Exception as e:
+                    print(f"[DEBUG] Error processing user data: {str(e)}")
+                    users = []
+                    total_users = 0
+                    confirmed_users = 0
+                    recent_users = 0
+            else:
+                print(f"[DEBUG] Direct API failed: {response.text}")
+                # Fallback to old method
+                response = supabase_admin.auth.admin.list_users()
+                print(f"[DEBUG] Fallback method response: {type(response)}")
+
+                if hasattr(response, 'data') and response.data:
+                    users_data = response.data
+                    total_users = len(users_data)
+                    
+                    # Process fallback users safely
+                    formatted_users = []
+                    confirmed_users = 0
+                    recent_users = 0
+                    
+                    from datetime import datetime, timedelta
+                    thirty_days_ago = datetime.now() - timedelta(days=30)
+                    
+                    for user in users_data:
+                        try:
+                            user_id = getattr(user, 'id', '')
+                            email = getattr(user, 'email', '')
+                            email_confirmed_at = getattr(user, 'email_confirmed_at', None)
+                            created_at = getattr(user, 'created_at', None)
+                            last_sign_in_at = getattr(user, 'last_sign_in_at', None)
+                            
+                            # Count confirmed users
+                            if email_confirmed_at:
+                                confirmed_users += 1
+                            
+                            # Count recent users
+                            if created_at:
+                                try:
+                                    created_date = datetime.fromisoformat(str(created_at).replace('Z', '+00:00'))
+                                    if created_date > thirty_days_ago:
+                                        recent_users += 1
+                                except (ValueError, TypeError):
+                                    pass
+                            
+                            formatted_users.append({
+                                'id': str(user_id),
+                                'email': str(email),
+                                'email_confirmed': email_confirmed_at is not None,
+                                'created_at': str(created_at) if created_at else '',
+                                'last_sign_in': str(last_sign_in_at) if last_sign_in_at else ''
+                            })
+                        except Exception as user_error:
+                            print(f"[DEBUG] Error processing fallback user: {user_error}")
+                            continue
+                    
+                    users = formatted_users
+                    print(f"[DEBUG] Successfully processed {len(users)} users via fallback, {confirmed_users} confirmed, {recent_users} recent")
 
         except Exception as e:
             print(f"[DEBUG] Failed to fetch admin data with service role key: {e}")

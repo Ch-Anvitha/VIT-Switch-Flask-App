@@ -1,29 +1,65 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="min-h-screen" style="background-color:#03045e">
+<div class="min-h-screen bg-white">
   <div class="container mx-auto px-4 py-8">
-    <div class="flex items-center mb-8">
-      <a href="{{ url_for('home') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-md mr-4">
-        ← Back
-      </a>
-      <h1 class="text-3xl text-white">Educational Videos</h1>
+    <!-- Header Section -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center">
+          <a href="{{ url_for('home') }}" class="text-white hover:bg-opacity-80 px-4 py-2 rounded-md mr-4 transition-all" style="background-color:#03045e">
+            ← Back to Home
+          </a>
+          <div>
+            <h1 class="text-3xl font-bold mb-1" style="color:#03045e">Educational Videos</h1>
+            <p class="text-gray-600">Learn with curated video content for your branch</p>
+          </div>
+        </div>
+        <div class="hidden md:block">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background-color:#e9ebef">
+            <svg class="w-8 h-8" style="color:#03045e" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="max-w-4xl mx-auto">
-      <div class="bg-white p-6 rounded-lg mb-6">
-        <label for="branch" class="block mb-2 font-medium">Select Your Branch</label>
-        <select id="branch" class="w-full border rounded-md h-10 px-3">
-          <option value="">Choose a branch...</option>
-          <option value="CSE">Computer Science (CSE)</option>
-          <option value="CSM">AI & Machine Learning (CSM)</option>
-          <option value="CSD">Data Science (CSD)</option>
-          <option value="CSIT">Information Technology (CSIT)</option>
+    <div class="max-w-6xl mx-auto">
+      <!-- Branch Selection Card -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex items-center mb-4">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" style="background-color:#e9ebef">
+            <svg class="w-5 h-5" style="color:#03045e" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold" style="color:#03045e">Select Your Branch</h2>
+        </div>
+        <select id="branch" class="w-full border-2 rounded-md h-12 px-4 text-gray-700 focus:outline-none transition-colors" style="border-color:#e9ebef">
+          <option value="">🎓 Choose your branch to see relevant videos...</option>
+          <option value="CSE">💻 Computer Science Engineering (CSE)</option>
+          <option value="CSM">🤖 AI & Machine Learning (CSM)</option>
+          <option value="CSD">📊 Data Science (CSD)</option>
+          <option value="CSIT">🔧 Information Technology (CSIT)</option>
         </select>
       </div>
 
-      <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Videos Grid -->
+      <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Videos will be dynamically loaded based on branch selection -->
       </div>
+      
+      <!-- Empty State -->
+      <div id="empty-state" class="text-center py-12" style="display:none;">
+        <div class="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color:#e9ebef">
+          <svg class="w-12 h-12" style="color:#03045e" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2" style="color:#03045e">Select a Branch</h3>
+        <p class="text-gray-600">Choose your branch from the dropdown above to see curated educational videos</p>
+      </div>
+    </div>
 
       <script>
         const branchSelect = document.getElementById('branch');
@@ -31,62 +67,84 @@
 
         const branchVideos = {
           CSE: [
-            { title: 'Data Structures and Algorithms', desc: 'CSE core subject tutorials', url: 'https://www.youtube.com/watch?v=8hly31xKli0' },
-            { title: 'Operating Systems', desc: 'OS concepts for CSE', url: 'https://www.youtube.com/watch?v=vBURTt97EkA' },
-            { title: 'Computer Architecture', desc: 'Hardware design and architecture', url: 'https://www.youtube.com/watch?v=FZGugFqdr60' },
-            { title: 'Software Engineering', desc: 'Development methodologies', url: 'https://www.youtube.com/watch?v=SUJZl5vBFKM' }
+            { title: 'Data Structures & Algorithms - Full Course', desc: 'Complete DSA tutorial by freeCodeCamp', url: 'https://www.youtube.com/watch?v=8hly31xKli0' },
+            { title: 'Operating Systems - Complete Course', desc: 'OS fundamentals by Neso Academy', url: 'https://www.youtube.com/watch?v=vBURTt97EkA' },
+            { title: 'Computer Networks Full Course', desc: 'Networking concepts for CSE students', url: 'https://www.youtube.com/watch?v=IPvYjXCsTg8' },
+            { title: 'Database Management Systems', desc: 'DBMS complete tutorial', url: 'https://www.youtube.com/watch?v=kBdlM6hNDAE' },
+            { title: 'Object Oriented Programming in Java', desc: 'OOP concepts with Java examples', url: 'https://www.youtube.com/watch?v=Wok4Xw_5cyY' },
+            { title: 'Software Engineering Principles', desc: 'SDLC and development methodologies', url: 'https://www.youtube.com/watch?v=thJSev60yfg' }
           ],
           CSM: [
-            { title: 'Machine Learning Fundamentals', desc: 'ML basics for CSM students', url: 'https://www.youtube.com/watch?v=Gv9_4yMHFhI' },
-            { title: 'Deep Learning', desc: 'Neural networks and AI', url: 'https://www.youtube.com/watch?v=aircAruvnKk' },
-            { title: 'Python for Data Science', desc: 'Programming for ML/AI', url: 'https://www.youtube.com/watch?v=LHBE6Q9XlzI' },
-            { title: 'AI Ethics and Applications', desc: 'AI concepts and applications', url: 'https://www.youtube.com/watch?v=OM6XIICm_qo' }
+            { title: 'Machine Learning Course - Stanford', desc: 'Andrew Ng\'s ML course basics', url: 'https://www.youtube.com/watch?v=jGwO_UgTS7I' },
+            { title: 'Deep Learning Explained', desc: 'Neural networks by 3Blue1Brown', url: 'https://www.youtube.com/watch?v=aircAruvnKk' },
+            { title: 'Python for Machine Learning', desc: 'Complete Python ML tutorial', url: 'https://www.youtube.com/watch?v=7eh4d6sabA0' },
+            { title: 'Natural Language Processing', desc: 'NLP fundamentals and applications', url: 'https://www.youtube.com/watch?v=X2vAabgKiuM' },
+            { title: 'Computer Vision Basics', desc: 'Image processing and CV concepts', url: 'https://www.youtube.com/watch?v=01sAkU_NvOY' },
+            { title: 'TensorFlow Complete Course', desc: 'Deep learning with TensorFlow', url: 'https://www.youtube.com/watch?v=tPYj3fFJGjk' }
           ],
           CSD: [
-            { title: 'Statistics for Data Science', desc: 'Statistical methods for data analysis', url: 'https://www.youtube.com/watch?v=4YLtvNeRIrg' },
-            { title: 'Big Data Technologies', desc: 'Hadoop, Spark, and big data tools', url: 'https://www.youtube.com/watch?v=1wzxEBlH8vk' },
-            { title: 'Data Visualization', desc: 'Creating insights from data', url: 'https://www.youtube.com/watch?v=5Zg-C8AAIGg' },
-            { title: 'Data Mining', desc: 'Extracting patterns from data', url: 'https://www.youtube.com/watch?v=fpHiKxBf4xQ' }
+            { title: 'Statistics for Data Science', desc: 'Statistical concepts for data analysis', url: 'https://www.youtube.com/watch?v=xxpc-HPKN28' },
+            { title: 'Python Data Analysis - Pandas', desc: 'Complete Pandas tutorial', url: 'https://www.youtube.com/watch?v=vmEHCJofslg' },
+            { title: 'Data Visualization with Python', desc: 'Matplotlib and Seaborn tutorial', url: 'https://www.youtube.com/watch?v=UO98lJQ3QGI' },
+            { title: 'SQL for Data Science', desc: 'Database queries for data analysis', url: 'https://www.youtube.com/watch?v=HXV3zeQKqGY' },
+            { title: 'Big Data with Apache Spark', desc: 'Spark fundamentals and applications', url: 'https://www.youtube.com/watch?v=F8pyaR4uQ2g' },
+            { title: 'Data Mining Techniques', desc: 'Pattern discovery in large datasets', url: 'https://www.youtube.com/watch?v=aircAruvnKk' }
           ],
           CSIT: [
-            { title: 'Information Security', desc: 'Cybersecurity fundamentals', url: 'https://www.youtube.com/watch?v=inWWhr5tnEA' },
-            { title: 'Network Administration', desc: 'IT infrastructure management', url: 'https://www.youtube.com/watch?v=qiQR5rTSshw' },
-            { title: 'Cloud Computing', desc: 'AWS, Azure, GCP basics', url: 'https://www.youtube.com/watch?v=M988_fsOSWo' },
-            { title: 'IT Project Management', desc: 'Managing IT projects', url: 'https://www.youtube.com/watch?v=Ri-ENcLNYUk' }
+            { title: 'Cybersecurity Full Course', desc: 'Information security fundamentals', url: 'https://www.youtube.com/watch?v=U_P23SqJaDc' },
+            { title: 'Network Administration Basics', desc: 'IT infrastructure management', url: 'https://www.youtube.com/watch?v=qiQR5rTSshw' },
+            { title: 'AWS Cloud Computing Course', desc: 'Amazon Web Services tutorial', url: 'https://www.youtube.com/watch?v=M988_fsOSWo' },
+            { title: 'Linux System Administration', desc: 'Linux server management', url: 'https://www.youtube.com/watch?v=2PGnYjbYuUo' },
+            { title: 'IT Project Management', desc: 'Agile and project management', url: 'https://www.youtube.com/watch?v=ff5cBkPg-bQ' },
+            { title: 'Ethical Hacking Course', desc: 'Penetration testing basics', url: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE' }
           ]
         };
 
         function renderVideos(videos) {
           videosGrid.innerHTML = '';
           videos.forEach(video => {
-            const thumbnailSrc = `https://img.youtube.com/vi/${video.url.split('v=')[1]}/default.jpg`;
-
-
+            // Extract video ID more safely
+            const videoId = video.url.includes('v=') ? video.url.split('v=')[1].split('&')[0] : '';
+            
             const videoCard = `
-              <div class="bg-white rounded-lg p-6 hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <div class="h-48 bg-gray-200 rounded-md mb-4 overflow-hidden relative group cursor-pointer" onclick="window.open('${video.url}', '_blank')">
-                  <img src="${thumbnailSrc}"
-                       alt="${video.title}"
-                       class="w-full h-full object-cover"
-                       onerror="this.src='/static/images/video-placeholder.jpg'; this.onerror=null;">
-                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                    <div class="bg-red-600 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden" style="border: 1px solid #e9ebef;">
+                <div class="h-48 overflow-hidden relative group cursor-pointer" onclick="window.open('${video.url}', '_blank')" style="background-color:#e9ebef;">
+                  <div class="w-full h-full flex items-center justify-center text-white font-semibold text-lg placeholder-bg" style="background-color:#03045e;">
+                    <div class="text-center">
+                      <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l8-5-8-5z"/>
+                      </svg>
+                      <div class="text-sm">Video Preview</div>
+                    </div>
+                  </div>
+                  ${videoId ? `
+                    <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg"
+                         alt="${video.title}"
+                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 absolute inset-0"
+                         onerror="this.style.display='none';"
+                         onload="this.previousElementSibling.style.display='none';">
+                  ` : ''}
+                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                    <div class="rounded-full p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="background-color:#03045e;">
+                      <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M8 5v10l8-5-8-5z"/>
                       </svg>
                     </div>
                   </div>
                 </div>
-                <h3 class="font-semibold mb-2 text-gray-800 line-clamp-2">${video.title}</h3>
-                <p class="text-sm text-gray-600 mb-4 line-clamp-2">${video.desc}</p>
-                <a href="${video.url || 'https://www.youtube.com/results?search_query=' + video.query}"
-                   target="_blank"
-                   class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors duration-200">
-                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M8 5v10l8-5-8-5z"/>
-                  </svg>
-                  Watch on YouTube
-                </a>
+                <div class="p-6">
+                  <h3 class="font-semibold mb-2 text-lg line-clamp-2" style="color:#03045e;">${video.title}</h3>
+                  <p class="text-sm text-gray-600 mb-4 line-clamp-2">${video.desc}</p>
+                  <a href="${video.url}"
+                     target="_blank"
+                     class="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md hover:bg-opacity-80 transition-all duration-200 w-full justify-center"
+                     style="background-color:#03045e;">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M8 5v10l8-5-8-5z"/>
+                    </svg>
+                    Watch on YouTube
+                  </a>
+                </div>
               </div>
             `;
             videosGrid.innerHTML += videoCard;
@@ -95,23 +153,45 @@
 
         // Default videos (general CS topics)
         const defaultVideos = [
-          { title: 'Programming Fundamentals', desc: 'Basic programming concepts', url: 'https://www.youtube.com/watch?v=zOjov-2OZ0E' },
-          { title: 'Web Development', desc: 'HTML, CSS, JavaScript basics', url: 'https://www.youtube.com/watch?v=BsDoLVMnmZs' },
-          { title: 'Version Control with Git', desc: 'Git and GitHub tutorials', url: 'https://www.youtube.com/watch?v=8JJ101D3knE' },
-          { title: 'Career in Tech', desc: 'Tech industry insights', url: 'https://www.youtube.com/watch?v=WSInHOlZGw4' }
+          { title: 'Programming Fundamentals - C++', desc: 'Complete C++ course for beginners', url: 'https://www.youtube.com/watch?v=vLnPwxZdW4Y' },
+          { title: 'Full Stack Web Development', desc: 'HTML, CSS, JavaScript complete course', url: 'https://www.youtube.com/watch?v=nu_pCVPKzTk' },
+          { title: 'Git & GitHub Complete Course', desc: 'Version control for developers', url: 'https://www.youtube.com/watch?v=apGV9Kg7ics' },
+          { title: 'Python Programming Full Course', desc: 'Complete Python tutorial for beginners', url: 'https://www.youtube.com/watch?v=_uQrJ0TkZlc' },
+          { title: 'Data Structures Visualization', desc: 'Visual guide to data structures', url: 'https://www.youtube.com/watch?v=92S4zgXN17o' },
+          { title: 'Tech Career Guidance', desc: 'How to build a career in technology', url: 'https://www.youtube.com/watch?v=Lhcq2BUO_T0' }
         ];
 
         // Load default videos initially
         renderVideos(defaultVideos);
+        
+        // Show/hide empty state
+        function toggleEmptyState(show) {
+          const emptyState = document.getElementById('empty-state');
+          if (show) {
+            emptyState.style.display = 'block';
+            videosGrid.style.display = 'none';
+          } else {
+            emptyState.style.display = 'none';
+            videosGrid.style.display = 'grid';
+          }
+        }
 
         // Handle branch selection
         branchSelect.addEventListener('change', function() {
           const selectedBranch = this.value;
-          if (selectedBranch && branchVideos[selectedBranch]) {
-            renderVideos(branchVideos[selectedBranch]);
-          } else {
-            renderVideos(defaultVideos);
-          }
+          
+          // Add loading state
+          videosGrid.innerHTML = '<div class="col-span-full text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style="border-color:#03045e;"></div><p class="mt-2 text-gray-600">Loading videos...</p></div>';
+          
+          setTimeout(() => {
+            if (selectedBranch && branchVideos[selectedBranch]) {
+              renderVideos(branchVideos[selectedBranch]);
+              toggleEmptyState(false);
+            } else {
+              renderVideos(defaultVideos);
+              toggleEmptyState(false);
+            }
+          }, 500);
         });
       </script>
     </div>
